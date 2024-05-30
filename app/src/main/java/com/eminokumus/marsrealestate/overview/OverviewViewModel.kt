@@ -24,6 +24,10 @@ import com.eminokumus.marsrealestate.network.MarsProperty
 //import kotlinx.coroutines.CoroutineScope
 //import kotlinx.coroutines.Dispatchers
 import com.eminokumus.marsrealestate.network.MarsApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
@@ -37,6 +41,9 @@ class OverviewViewModel : ViewModel() {
     val response: LiveData<String>
         get() = _response
 
+    private var viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
     init {
         getMarsRealEstateProperties()
     }
@@ -48,15 +55,20 @@ class OverviewViewModel : ViewModel() {
      * @param filter the [MarsApiFilter] that is sent as part of the web server request
      */
     private fun getMarsRealEstateProperties() {
-        MarsApi.retrofitService.getProperties().enqueue(object : retrofit2.Callback<List<MarsProperty>> {
-            override fun onResponse(call: Call<List<MarsProperty>>, response: Response<List<MarsProperty>>) {
-                _response.value = "Success: ${response.body()?.size} Mars properties retrieved."
+        try {
+            coroutineScope.launch {
+                val getPropertiesDeferred = MarsApi.retrofitService.getProperties()
+                var listResult = getPropertiesDeferred.await()
+                _response.value = "Success: ${listResult.size} Mars properties retrieved."
             }
-
-            override fun onFailure(call: Call<List<MarsProperty>>, t: Throwable) {
-                _response.value = "Failure: " + t.message
-            }
-        })
+        }catch (t: Throwable){
+            _response.value = "Failure: " + t.message
+        }
         _response.value = "Set the Mars API Response here!"
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 }

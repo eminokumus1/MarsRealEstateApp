@@ -18,8 +18,10 @@
 package com.eminokumus.marsrealestate.network
 
 // import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 // import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
@@ -34,14 +36,14 @@ private val moshi = Moshi.Builder()
     .build()
 
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .addCallAdapterFactory(CoroutineCallAdapterFactory())
     .baseUrl(BASE_URL)
     .build()
 
 interface MarsApiService{
     @GET("realestate")
     fun getProperties():
-            Call<List<MarsProperty>>
+            Deferred<List<MarsProperty>>
 }
 
 object MarsApi{

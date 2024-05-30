@@ -51,7 +51,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.1")
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
@@ -67,4 +67,8 @@ dependencies {
 
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
 }
