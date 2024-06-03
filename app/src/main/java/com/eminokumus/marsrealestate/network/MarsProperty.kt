@@ -28,10 +28,10 @@ import kotlinx.android.parcel.Parcelize
  * Deferred, which we await to get the result of the transaction.
  * @param filter the [MarsApiFilter] that is sent as part of the web server request
  */
-
+@Parcelize
 data class MarsProperty(
     val id: String,
     @Json(name = "img_src") val imgSrcUrl: String,
     val type: String,
     val price: Double
-)
+) : Parcelable
