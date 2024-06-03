@@ -56,8 +56,16 @@ class OverviewFragment : Fragment() {
         binding.viewModel = viewModel
 
         // Sets the adapter of the photosGrid RecyclerView with clickHandler lambda that
-        binding.photosGrid.adapter = PhotoGridAdapter()
+        binding.photosGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener{
+            viewModel.displayPropertyDetails(it)
+        })
         // tells the viewModel when our property is clicked
+        viewModel.navigateToSelectedProperty.observe(viewLifecycleOwner, Observer {
+            if (null != it){
+                this.findNavController().navigate(OverviewFragmentDirections.actionShowDetail(it))
+                viewModel.displayPropertyDetailsComplete()
+            }
+        })
 
         setHasOptionsMenu(true)
         return binding.root

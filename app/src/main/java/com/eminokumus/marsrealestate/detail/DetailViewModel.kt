@@ -29,4 +29,11 @@ import com.eminokumus.marsrealestate.network.MarsProperty
  *  The [ViewModel] associated with the [DetailFragment], containing information about the selected
  *  [MarsProperty].
  */
-class DetailViewModel(marsProperty: MarsProperty, app: Application) : AndroidViewModel(app)
+class DetailViewModel(marsProperty: MarsProperty, app: Application) : AndroidViewModel(app){
+    private val _selectedProperty = MutableLiveData<MarsProperty>()
+    val selectedProperty: LiveData<MarsProperty> get() = _selectedProperty
+
+    init {
+        _selectedProperty.value = marsProperty
+    }
+}
