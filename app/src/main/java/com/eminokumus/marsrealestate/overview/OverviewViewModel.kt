@@ -24,6 +24,7 @@ import com.eminokumus.marsrealestate.network.MarsProperty
 //import kotlinx.coroutines.CoroutineScope
 //import kotlinx.coroutines.Dispatchers
 import com.eminokumus.marsrealestate.network.MarsApi
+import com.eminokumus.marsrealestate.network.MarsApiFilter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -50,7 +51,7 @@ class OverviewViewModel : ViewModel() {
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        getMarsRealEstateProperties()
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)
     }
 
     /**
@@ -59,12 +60,12 @@ class OverviewViewModel : ViewModel() {
      * returns a coroutine Deferred, which we await to get the result of the transaction.
      * @param filter the [MarsApiFilter] that is sent as part of the web server request
      */
-    private fun getMarsRealEstateProperties() {
+    private fun getMarsRealEstateProperties(filter: MarsApiFilter) {
         try {
             coroutineScope.launch {
                 _status.value = MarsApiStatus.LOADING
-                val getPropertiesDeferred = MarsApi.retrofitService.getProperties()
-                var listResult = getPropertiesDeferred.await()
+                val getPropertiesDeferred = MarsApi.retrofitService.getProperties(filter.value)
+                val listResult = getPropertiesDeferred.await()
                 _status.value = MarsApiStatus.DONE
                 _properties.value = listResult
 
@@ -85,5 +86,8 @@ class OverviewViewModel : ViewModel() {
     }
     fun displayPropertyDetailsComplete(){
         _navigateToSelectedProperty.value = null
+    }
+    fun updateFilter(filter: MarsApiFilter){
+        getMarsRealEstateProperties(filter)
     }
 }
